@@ -39,6 +39,7 @@ from fuzzywuzzy.process import extract
 
 from PyQt5 import QtGui, QtCore, QtWidgets, uic
 import os, sys
+from subprocess import Popen
 
 #list of common prefixes (courtesies)
 PREFIX_LOC = "./all_prefix.json"
@@ -643,7 +644,7 @@ class View(QtWidgets.QFrame):
     def __init__(self, out):
         super().__init__()
         uic.loadUi(os.path.join(os.path.dirname(__file__), 'ui/view.ui'), self)
-
+        self.out = out
         data = pd.read_csv(out)
         table_header = [i for i in data.columns]
         self.table.setColumnCount(len(table_header))
@@ -664,6 +665,17 @@ class View(QtWidgets.QFrame):
                 self.table.setItem(r, c, QtWidgets.QTableWidgetItem(str(data.iloc[r][c])))
                 rrr.append(str(data.iloc[r][c]))
             print(rrr)
+        self.o_e.clicked.connect(self.open_e)
+        self.o_x.clicked.connect(self.open_x)
+    
+    def open_x(self):
+      o = Popen(r''.join(self.out), shell = True)
+      
+    def open_e(self):
+      path = r''.join(self.out)
+      Popen(f'explorer /select, "{self.out}"')
+
+
 
 
 
